@@ -1,5 +1,5 @@
 # Plotly.js for Svelte
-This is an unoficial package that lets you efficiently use [plotly.js] inside your Svelte or SvelteKit app.
+This is an unofficial package that lets you efficiently use [plotly.js](https://plotly.com/javascript/) inside your Svelte or SvelteKit app.
 
 ## Usage
 
