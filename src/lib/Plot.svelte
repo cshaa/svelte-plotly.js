@@ -7,6 +7,7 @@
     console.log(element);
 
     onMount(async () => {
+        (window as any).global = window;
         Plotly = await import("plotly.js");
         console.log('loaded', Plotly);
     });

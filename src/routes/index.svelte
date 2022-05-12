@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Plot from "../../lib/Plot.svelte";
+    import Plot from "$lib/Plot.svelte";
 </script>
 
 <h1>Welcome to SvelteKit</h1>
