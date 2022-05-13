@@ -35,9 +35,9 @@ This is an unofficial package that lets you efficiently use [plotly.js](https://
 | `layout`  | `Partial<Layout>` | layout of the plot, see https://plot.ly/javascript/reference/#layout
 | `config`  | `Partial<Config>` | configuration, see https://plot.ly/javascript/configuration-options/
 | `class`   | `string`          | class that will be passed to the HTML element wrapping the plot
-| `fillParent` | `boolean | 'width' | 'height'` | automatically resize the plot to fill the width and/or height of its parent element
-| `debounce` | `number|DebounceOptions` | debounce all changes to the plot
-| `libPlotly` | `Plotly|null|undefined` | an alternative Plotly bundle to use; if undefined, it defaults to the `plotly.js-dist` package; if null, no plot will be drawn and no library will be downloaded
+| `fillParent` | `boolean \| 'width' \| 'height'` | automatically resize the plot to fill the width and/or height of its parent element
+| `debounce` | `number \| DebounceOptions` | debounce all changes to the plot
+| `libPlotly` | `Plotly \| null \| undefined` | an alternative Plotly bundle to use; if undefined, it defaults to the `plotly.js-dist` package; if null, no plot will be drawn and no library will be downloaded
 | `bind:element` | `HTMLDivElement` | the HTML element wrapping the plot
 | `bind:plot` | `PlotlyHTMLElement` | the inner HTML element containing the plot
 
