@@ -1,6 +1,6 @@
 {
   "name": "svelte-plotly.js",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": {
     "name": "Michal Grňo (m93a)",
     "url": "https://github.com/m93a/"
@@ -31,8 +31,6 @@
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",
     "@sveltejs/kit": "next",
-    "@types/lodash": "^4.14.182",
-    "@types/plotly.js": "^1.54.20",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "eslint": "^8.12.0",
@@ -50,6 +48,8 @@
   },
   "type": "module",
   "dependencies": {
+    "@types/lodash": "^4.14.182",
+    "@types/plotly.js": "^1.54.20",
     "lodash": "^4.17.21",
     "plotly.js-dist": "^2.12.1"
   },
