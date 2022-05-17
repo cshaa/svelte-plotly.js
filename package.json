@@ -1,6 +1,6 @@
 {
   "name": "svelte-plotly.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": {
     "name": "Michal Grňo (m93a)",
     "url": "https://github.com/m93a/"
@@ -52,5 +52,6 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "plotly.js-dist": "^2.12.1"
-  }
+  },
+  "types": "./Plot.svelte.d.ts"
 }
