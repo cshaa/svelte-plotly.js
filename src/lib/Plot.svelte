@@ -11,7 +11,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { debounce as debouncify } from 'lodash';
-  import { browser } from '$app/env';
+  const browser = typeof window === 'object';
   type not = undefined | null;
 
   const nextFrame = browser ? requestAnimationFrame : () => void 0;
