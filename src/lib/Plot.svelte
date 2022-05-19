@@ -2,7 +2,7 @@
   import type { Data, Layout, Config, PlotlyHTMLElement } from 'plotly.js';
   export type { Data, Layout, Config, PlotlyHTMLElement };
   export type FillParent = boolean | 'width' | 'height';
-  import type { DebounceSettings } from 'lodash';
+  import type { DebounceSettings } from 'lodash-es';
   export interface DebounceOptions extends DebounceSettings {
     wait: number;
   }
@@ -10,7 +10,7 @@
 
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { debounce as debouncify } from 'lodash';
+  import { debounce as debouncify } from 'lodash-es';
   const browser = typeof window === 'object';
   type not = undefined | null;
 
