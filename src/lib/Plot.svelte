@@ -9,11 +9,13 @@
 </script>
 
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import { debounce as debouncify } from 'lodash';
   const browser = typeof window === 'object';
   type not = undefined | null;
 
+  const dispatch = createEventDispatcher();
+  
   const nextFrame = browser ? requestAnimationFrame : () => void 0;
 
   async function loadPlotly() {
@@ -73,7 +75,17 @@
     l: Partial<Layout>,
     c: Partial<Config>
   ) => {
-    if (e) lib?.react(e, d, l, c).then(p => (plot = p));
+    if (e) {
+      lib?.react(e, d, l, c)
+          .then((p) => (plot = p))
+          .then(() => {
+            e.on("plotly_relayout", (e) => {
+              dispatch("relayout", {
+                data: e,
+              });
+            });
+          });
+     }
   };
 
   $: draw = debouncify(drawUndebounced, debounceWait, debounceOptions);
