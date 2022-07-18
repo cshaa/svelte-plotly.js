@@ -1,20 +1,65 @@
 <script context="module" lang="ts">
-  import type { Data, Layout, Config, PlotlyHTMLElement } from 'plotly.js';
-  export type { Data, Layout, Config, PlotlyHTMLElement };
+  import type {
+    Data,
+    Layout,
+    Config,
+    PlotlyHTMLElement,
+    BeforePlotEvent,
+    ClickAnnotationEvent,
+    FrameAnimationEvent,
+    LegendClickEvent,
+    PlotMouseEvent,
+    PlotRelayoutEvent,
+    PlotRestyleEvent,
+    PlotSelectionEvent,
+    SliderEndEvent,
+    SliderChangeEvent,
+    SliderStartEvent,
+    SunburstClickEvent
+  } from 'plotly.js';
+
+  export type {
+    Data,
+    Layout,
+    Config,
+    PlotlyHTMLElement,
+    BeforePlotEvent,
+    ClickAnnotationEvent,
+    FrameAnimationEvent,
+    LegendClickEvent,
+    PlotMouseEvent,
+    PlotRelayoutEvent,
+    PlotRestyleEvent,
+    PlotSelectionEvent,
+    SliderChangeEvent,
+    SliderStartEvent,
+    SunburstClickEvent
+  };
+
   export type FillParent = boolean | 'width' | 'height';
-  import type { DebounceSettings } from 'lodash';
+  import type { DebounceSettings } from 'lodash-es';
+
   export interface DebounceOptions extends DebounceSettings {
     wait: number;
+  }
+
+  export interface ButtonClickedEvent {
+    menu: any;
+    button: any;
+    active: any;
+  }
+
+  export interface PlotUpdateEvent {
+    data: Data;
+    layout: Layout;
   }
 </script>
 
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
-  import { debounce as debouncify } from 'lodash';
+  import { debounce as debouncify } from 'lodash-es';
   const browser = typeof window === 'object';
   type not = undefined | null;
-
-  const dispatch = createEventDispatcher();
 
   const nextFrame = browser ? requestAnimationFrame : () => void 0;
 
@@ -28,6 +73,86 @@
 
   const DEFAULT_WIDTH = 500;
   const DEFAULT_HEIGHT = 300;
+
+  // events
+  interface $$Events {
+    afterExport: undefined;
+    afterPlot: undefined;
+    animated: undefined;
+    animating: undefined;
+    animatingFrame: FrameAnimationEvent;
+    animationInterrupted: undefined;
+    autoSize: undefined;
+    beforeExport: undefined;
+    beforeHover: PlotMouseEvent;
+    beforePlot: BeforePlotEvent;
+    buttonClicked: ButtonClickedEvent;
+    click: PlotMouseEvent;
+    clickAnnotation: ClickAnnotationEvent;
+    deselect: undefined;
+    doubleClick: undefined;
+    framework: undefined;
+    hover: PlotMouseEvent;
+    legendClick: LegendClickEvent;
+    legendDoubleClick: LegendClickEvent;
+    react: PlotUpdateEvent;
+    redraw: undefined;
+    relayout: PlotRelayoutEvent;
+    relayouting: PlotRelayoutEvent;
+    restyle: PlotRestyleEvent;
+    selected: PlotSelectionEvent;
+    selecting: PlotSelectionEvent;
+    sliderChange: SliderChangeEvent;
+    sliderEnd: SliderEndEvent;
+    sliderStart: SliderStartEvent;
+    sunburstClick: SunburstClickEvent;
+    transitioned: undefined;
+    transitioning: undefined;
+    transitionInterrupted: undefined;
+    unhover: PlotMouseEvent;
+    update: PlotUpdateEvent;
+    webGLContextLost: undefined;
+  }
+  const events = <const>{
+    plotly_afterexport: 'afterExport',
+    plotly_afterplot: 'afterPlot',
+    plotly_animated: 'animated',
+    plotly_animating: 'animating',
+    plotly_animatingframe: 'animatingFrame',
+    plotly_animationinterrupted: 'animationInterrupted',
+    plotly_autosize: 'autoSize',
+    plotly_beforeexport: 'beforeExport',
+    plotly_beforehover: 'beforeHover',
+    plotly_beforeplot: 'beforePlot',
+    plotly_buttonclicked: 'buttonClicked',
+    plotly_click: 'click',
+    plotly_clickannotation: 'clickAnnotation',
+    plotly_deselect: 'deselect',
+    plotly_doubleclick: 'doubleClick',
+    plotly_framework: 'framework',
+    plotly_hover: 'hover',
+    plotly_legendclick: 'legendClick',
+    plotly_legenddoubleclick: 'legendDoubleClick',
+    plotly_react: 'react',
+    plotly_redraw: 'redraw',
+    plotly_relayout: 'relayout',
+    plotly_relayouting: 'relayouting',
+    plotly_restyle: 'restyle',
+    plotly_selected: 'selected',
+    plotly_selecting: 'selecting',
+    plotly_sliderchange: 'sliderChange',
+    plotly_sliderend: 'sliderEnd',
+    plotly_sliderstart: 'sliderStart',
+    plotly_sunburstclick: 'sunburstClick',
+    plotly_transitioned: 'transitioned',
+    plotly_transitioning: 'transitioning',
+    plotly_transitioninterrupted: 'transitionInterrupted',
+    plotly_unhover: 'unhover',
+    plotly_update: 'update',
+    plotly_webglcontextlost: 'webGLContextLost'
+    // TODO add all plotly_${traceType}click
+  };
+  const dispatch = createEventDispatcher<$$Events>();
 
   // bind props
   export let element: HTMLDivElement | not = undefined;
@@ -46,12 +171,13 @@
   // set up
   onMount(async () => {
     (window as any).global = window;
-    loadPlotly();
+    await loadPlotly();
   });
 
   // state props
   let datarevision = 0;
   let previousLib = libPlotly;
+  let previousPlot = plot;
   let width: number = DEFAULT_WIDTH;
   let height: number = DEFAULT_HEIGHT;
 
@@ -63,9 +189,19 @@
   $: config_ = { displaylogo: false, ...config };
   $: draw(libPlotly, element, data, layout_, config_);
   $: {
-    if (element && previousLib !== libPlotly) previousLib?.purge(element);
+    if (element && previousLib !== libPlotly) {
+      previousLib?.purge(element);
+      plot = undefined;
+    }
     previousLib = libPlotly;
     loadPlotly();
+  }
+  $: if (previousPlot !== plot) {
+    for (const [plotlyEvent, svelteEvent] of Object.entries(events)) {
+      previousPlot?.removeAllListeners?.(plotlyEvent);
+      plot?.on(plotlyEvent as any, (e: any) => dispatch(svelteEvent, e));
+    }
+    previousPlot = plot;
   }
 
   const drawUndebounced = (
@@ -75,47 +211,7 @@
     l: Partial<Layout>,
     c: Partial<Config>
   ) => {
-    lib
-      ?.react(e, d, l, c)
-      .then(p => (plot = p))
-      .then(() => {
-        [
-          'plotly_click',
-          'plotly_hover',
-          'plotly_unhover',
-          'plotly_selecting',
-          'plotly_selected',
-          'plotly_restyle',
-          'plotly_relayout',
-          'plotly_relayouting',
-          'plotly_clickannotation',
-          'plotly_animatingframe',
-          'plotly_legendclick',
-          'plotly_legenddoubleclick',
-          'plotly_sliderchange',
-          'plotly_sliderend',
-          'plotly_sliderstart',
-          'plotly_sunburstclick',
-          'plotly_event',
-          'plotly_beforeplot',
-          'plotly_afterexport',
-          'plotly_afterplot',
-          'plotly_animated',
-          'plotly_animationinterrupted',
-          'plotly_autosize',
-          'plotly_beforeexport',
-          'plotly_deselect',
-          'plotly_doubleclick',
-          'plotly_framework',
-          'plotly_redraw',
-          'plotly_transitioning',
-          'plotly_transitioninterrupted'
-        ].forEach(element => {
-          e.on(element, event => {
-            dispatch(element, event);
-          });
-        });
-      });
+    if (e) lib?.react(e, d, l, c).then(p => (plot = p));
   };
 
   $: draw = debouncify(drawUndebounced, debounceWait, debounceOptions);

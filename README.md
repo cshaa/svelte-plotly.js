@@ -45,5 +45,6 @@ This is an unofficial package that lets you efficiently use [plotly.js](https://
 # Roadmap
  * [x] add autosizing
  * [x] add debouncing
+ * [ ] add event redirecting
  * [ ] add unit tests
  * [ ] add SSR rendering to an image
