@@ -38,6 +38,8 @@
     margin: { t: 0 }
   }}
   libPlotly={useDefaultLib ? undefined : null}
+  on:click={console.log}
+  on:relayout={console.log}
 />
 
 <div class="controls">
