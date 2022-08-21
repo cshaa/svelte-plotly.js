@@ -29,6 +29,7 @@
     FrameAnimationEvent,
     LegendClickEvent,
     PlotMouseEvent,
+    PlotHoverEvent,
     PlotRelayoutEvent,
     PlotRestyleEvent,
     PlotSelectionEvent,
