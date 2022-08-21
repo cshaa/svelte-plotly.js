@@ -9,6 +9,7 @@
     FrameAnimationEvent,
     LegendClickEvent,
     PlotMouseEvent,
+    PlotHoverEvent,
     PlotRelayoutEvent,
     PlotRestyleEvent,
     PlotSelectionEvent,
@@ -92,7 +93,7 @@
     deselect: undefined;
     doubleClick: undefined;
     framework: undefined;
-    hover: PlotMouseEvent;
+    hover: PlotHoverEvent;
     legendClick: LegendClickEvent;
     legendDoubleClick: LegendClickEvent;
     react: PlotUpdateEvent;
