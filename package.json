@@ -38,6 +38,7 @@
     "eslint-plugin-svelte3": "^4.0.0",
     "prettier": "^2.5.1",
     "prettier-plugin-svelte": "^2.5.0",
+    "plotly.js-dist": "^2.12.1",
     "sass": "^1.51.0",
     "svelte": "^3.44.0",
     "svelte-check": "^2.2.6",
@@ -50,8 +51,10 @@
   "dependencies": {
     "@types/lodash-es": "^4.17.6",
     "@types/plotly.js": "^2.12.2",
-    "lodash-es": "^4.17.21",
-    "plotly.js-dist": "^2.12.1"
+    "lodash-es": "^4.17"
+  },
+  "peerDependencies": {
+    "plotly.js-dist": "^2.12"
   },
   "types": "./Plot.svelte.d.ts",
   "exports": {

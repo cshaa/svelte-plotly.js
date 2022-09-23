@@ -67,9 +67,14 @@
 
   async function loadPlotly() {
     if (!browser) return;
+
     if (libPlotly === undefined) {
-      const p = await import('plotly.js-dist');
-      if (libPlotly === undefined) libPlotly = p;
+      if (window.Plotly) {
+        libPlotly = window.Plotly;
+      } else {
+        const p = await import('plotly.js-dist');
+        if (libPlotly === undefined) libPlotly = p;
+      }
     }
   }
 
