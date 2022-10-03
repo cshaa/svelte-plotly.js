@@ -50,7 +50,7 @@
   "type": "module",
   "dependencies": {
     "@types/lodash-es": "^4.17.6",
-    "@types/plotly.js": "^2.12.2",
+    "@types/plotly.js": "^2.12.5",
     "lodash-es": "^4.17"
   },
   "peerDependencies": {
