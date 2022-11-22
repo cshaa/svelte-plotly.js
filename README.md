@@ -4,7 +4,10 @@ This is an unofficial package that lets you efficiently use [plotly.js](https://
 ## Usage
 
 1. Install using `yarn add svelte-plotly.js` or `npm install svelte-plotly.js`.
-2. Use in your app
+2. Choose a Plotly distribution:
+   * If you want to use `plotly.js-dist`, just install it.
+   * If you want to use a different distribution, take a look at [this section](#custom-plotly-distribution).
+3. Use in your app:
 
 ```svelte
 <script lang="ts">
@@ -26,6 +29,26 @@ This is an unofficial package that lets you efficiently use [plotly.js](https://
   fillParent='width'
   debounce={250}
 />
+```
+
+## Custom Plotly distribution
+Let's say you want to use svelte-plotly.js with a custom Plotly.js distribution, for example [`plotly.js-basic-dist-min`](https://www.npmjs.com/package/plotly.js-basic-dist-min). If you use Vite for bundling, the recommended way to do this would be to install `plotly.js-basic-dist-min` and then register it as an alias for `plotly.js-dist` by adding the following to your [`vite.config.js`](https://vitejs.dev/config/shared-options.html#resolve-alias):
+```js
+resolve: {
+  alias: {
+    "plotly.js-dist": "plotly.js-basic-dist-min",
+    lodash: "lodash-es",
+  },
+},
+```
+If you don't use Vite, or this approach doesn't work for you, you can also use the `libPlotly` prop of the `Plotly` component:
+```svelte
+<script lang="ts">
+  import Plot from 'svelte-plotly.js';
+  import libPlotly from 'plotly.js-basic-dist-min';
+</script>
+
+<Plot {libPlotly} ... />
 ```
 
 ## Properties
