@@ -120,11 +120,6 @@
     magic-string "^0.26.1"
     svelte-hmr "^0.14.11"
 
-"@types/d3@^3":
-  version "3.5.47"
-  resolved "https://registry.yarnpkg.com/@types/d3/-/d3-3.5.47.tgz#b81042fcb0195c583fc037bc857d161469a7d175"
-  integrity sha512-VkWIQoZXLFdcBGe5pdBKJmTU3fmpXvo/KV6ixvTzOMl1yJ2hbTXpfvsziag0kcaerPDwas2T0vxojwQG3YwivQ==
-
 "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
@@ -147,12 +142,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.32.tgz#51d59d7a90ef2d0ae961791e0900cad2393a0149"
   integrity sha512-eAIcfAvhf/BkHcf4pkLJ7ECpBAhh9kcxRBpip9cTiO+hf+aJrsxYxBeS6OXvOd9WqNAJmavXVpZvY1rBjNsXmw==
 
-"@types/plotly.js@^2.12.2":
-  version "2.12.2"
-  resolved "https://registry.yarnpkg.com/@types/plotly.js/-/plotly.js-2.12.2.tgz#9e4c61d3aaf33aee98fc5bdbeffd6cd85271f3f8"
-  integrity sha512-cYJMFl01yZVuyrJcDD5LZzRK0wlizWe4lqoT4x87v2TXISZ7HVioWxEVt9n3OiqHDWqqAGMx8Erj7TJ3PeMTjw==
-  dependencies:
-    "@types/d3" "^3"
+"@types/plotly.js@^2.12.5":
+  version "2.12.9"
+  resolved "https://registry.yarnpkg.com/@types/plotly.js/-/plotly.js-2.12.9.tgz#de8ee0776247cbdc9fa88e87cda9b8d151a7f79b"
+  integrity sha512-ML5pFv06KSozZqRO74Yt2XQg7A6Q2vtL3qGmO7nbKGpkk39vNdHYHD9w96Y4XK2TrhZKOxGirFjkou7IK5xdoA==
 
 "@types/pug@^2.0.4":
   version "2.0.6"

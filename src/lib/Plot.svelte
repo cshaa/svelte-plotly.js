@@ -73,7 +73,7 @@
         libPlotly = window.Plotly;
       } else {
         const p = await import('plotly.js-dist');
-        if (libPlotly === undefined) libPlotly = p;
+        if (libPlotly === undefined) libPlotly = 'default' in p ? p.default : p;
       }
     }
   }
