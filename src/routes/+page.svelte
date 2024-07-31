@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Plot from './lib/Plot.svelte';
-  import type { Data, FillParent, DebounceOptions, Config } from './lib/Plot.svelte';
+  import Plot from '$lib/Plot.svelte';
+  import type { Data, FillParent, DebounceOptions, Config } from '$lib/Plot.svelte';
 
   // FA icons borrowed for testing purposes only
   const MAXIMIZE_ICON = {

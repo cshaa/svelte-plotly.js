@@ -189,7 +189,7 @@
   let height: number = DEFAULT_HEIGHT;
 
   // updates
-  $: debounceWait = typeof debounce === 'object' ? debounce.wait : debounce ?? 0;
+  $: debounceWait = typeof debounce === 'object' ? debounce.wait : (debounce ?? 0);
   $: debounceOptions = typeof debounce === 'object' ? debounce : {};
   $: data, (datarevision = (datarevision + 1) % 1000);
   $: layout_ = { datarevision, width, height, ...layout };
@@ -251,7 +251,7 @@
       window.getComputedStyle(parent);
 
     const maxWidth = offsetWidth - parseInt(paddingLeft) - parseInt(paddingRight);
-    const maxHeight = offsetHeight - parseInt(paddingTop) - parseInt(paddingRight);
+    const maxHeight = offsetHeight - parseInt(paddingTop) - parseInt(paddingBottom);
 
     width = fillParentWidth ? maxWidth : DEFAULT_WIDTH;
     height = fillParentHeight ? maxHeight : DEFAULT_HEIGHT;
