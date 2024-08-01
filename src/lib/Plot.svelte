@@ -160,17 +160,53 @@
   };
   const dispatch = createEventDispatcher<$$Events>();
 
-  // bind props
+  //
+  // Bind Props
+  /** The HTML element wrapping the plot. */
   export let element: HTMLDivElement | undefined = undefined;
+  /** The inner HTML element containing the plot. */
   export let plot: PlotlyHTMLElement | undefined = undefined;
 
-  // input props
+  //
+  // Input Props
+
+  /**
+   * Alternative Plotly bundle to use. If `undefined`, it defaults to
+   * the `plotly.js-dist` package; if null, no plot will be drawn and
+   * no library will be downloaded.
+   */
   export let libPlotly: typeof import('plotly.js-dist') | null | undefined = undefined;
+
+  /**
+   * Array of trace data, see https://plot.ly/javascript/reference/
+   */
   export let data: Data[];
+
+  /**
+   * Layout of the plot, see https://plot.ly/javascript/reference/#layout
+   */
   export let layout: Partial<Layout> | undefined = undefined;
+
+  /**
+   * Configuration, see https://plot.ly/javascript/configuration-options/
+   */
   export let config: Partial<Config> | undefined = undefined;
+
+  /**
+   * Automatically resize the plot to fill the width and/or
+   * height of its parent element.
+   */
   export let fillParent: FillParent = false;
+
+  /**
+   * Debounce all changes to the plot.
+   */
   export let debounce: number | DebounceOptions = 0;
+
+  /**
+   * Class attribute that will be passed to the HTML element
+   * wrapping the plot
+   */
   let className = '';
   export { className as class };
 
