@@ -60,33 +60,37 @@
   }
 </script>
 
-<Plot
-  {data}
-  {fillParent}
-  {debounce}
-  {config}
-  layout={{
-    margin: { t: 0 }
-  }}
-  libPlotly={useDefaultLib ? undefined : null}
-  on:click={console.log}
-  on:relayout={console.log}
-/>
+<main>
+  <section class="plot">
+    <Plot
+      {data}
+      {fillParent}
+      {debounce}
+      {config}
+      layout={{
+        margin: { t: 0 }
+      }}
+      libPlotly={useDefaultLib ? undefined : null}
+      on:click={console.log}
+      on:relayout={console.log}
+    />
+  </section>
 
-<div class="controls">
-  <button on:click={addData}>Add trace</button>
-  <button on:click={changeY0}>Increase y<sub>0</sub></button>
-  <button on:click={() => (useDefaultLib = !useDefaultLib)}>Swap lib</button>
-  <button on:click={() => (fillParent = false)}>Fixed size</button>
-  <button on:click={() => (fillParent = true)}>Fill parent</button>
-  <button on:click={() => (fillParent = 'width')}>Fill width</button>
-  <button on:click={() => (fillParent = 'height')}>Fill height</button>
-  <button on:click={() => (debounce = undefined)}>Don't debounce</button>
-  <button on:click={() => (debounce = 500)}>Debounce 500ms</button>
-  <button on:click={() => (debounce = { wait: 500, maxWait: 2000 })}
-    >Debounce 500ms, max wait 2s</button
-  >
-</div>
+  <section class="controls">
+    <button on:click={addData}>Add trace</button>
+    <button on:click={changeY0}>Increase y<sub>0</sub></button>
+    <button on:click={() => (useDefaultLib = !useDefaultLib)}>Swap lib</button>
+    <button on:click={() => (fillParent = false)}>Fixed size</button>
+    <button on:click={() => (fillParent = true)}>Fill parent</button>
+    <button on:click={() => (fillParent = 'width')}>Fill width</button>
+    <button on:click={() => (fillParent = 'height')}>Fill height</button>
+    <button on:click={() => (debounce = undefined)}>Don't debounce</button>
+    <button on:click={() => (debounce = 500)}>Debounce 500ms</button>
+    <button on:click={() => (debounce = { wait: 500, maxWait: 2000 })}
+      >Debounce 500ms, max wait 2s</button
+    >
+  </section>
+</main>
 
 <style lang="scss">
   :global(html, body, body > div) {
@@ -95,9 +99,17 @@
     width: 100vw;
     height: 100vh;
   }
-  .controls {
-    position: absolute;
-    left: 0;
-    bottom: 0;
+  main {
+    display: flex;
+    flex-direction: column;
+    justify-items: stretch;
+
+    width: 100vw;
+    height: 100vh;
+
+    .plot {
+      flex-grow: 1;
+      margin: 1rem;
+    }
   }
 </style>
