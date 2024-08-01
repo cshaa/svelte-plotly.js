@@ -61,7 +61,6 @@
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import { debounce as debouncify } from 'lodash-es';
   const browser = typeof window === 'object';
-  type not = undefined | null;
 
   const nextFrame = browser ? requestAnimationFrame : () => void 0;
 
@@ -162,8 +161,8 @@
   const dispatch = createEventDispatcher<$$Events>();
 
   // bind props
-  export let element: HTMLDivElement | not = undefined;
-  export let plot: PlotlyHTMLElement | not = undefined;
+  export let element: HTMLDivElement | undefined = undefined;
+  export let plot: PlotlyHTMLElement | undefined = undefined;
 
   // input props
   export let libPlotly: typeof import('plotly.js-dist') | null | undefined = undefined;
@@ -211,14 +210,16 @@
     previousPlot = plot;
   }
 
-  const drawUndebounced = (
+  const drawUndebounced = async (
     lib: typeof libPlotly,
-    e: HTMLDivElement | not,
+    e: HTMLDivElement | undefined,
     d: Data[],
     l: Partial<Layout>,
     c: Partial<Config>
   ) => {
-    if (e) lib?.react(e, d, l, c).then(p => (plot = p));
+    if (lib && e) {
+      plot = await lib.react(e, d, l, c);
+    }
   };
 
   $: draw = debouncify(drawUndebounced, debounceWait, debounceOptions);
@@ -230,18 +231,19 @@
   $: fillParent, nextFrame(onResize);
   $: fillParentWidth = fillParent === true || fillParent === 'width';
   $: fillParentHeight = fillParent === true || fillParent === 'height';
-  $: parent = element?.parentElement;
-  let lastParent: typeof parent = null;
+  $: parent = element?.parentElement ?? undefined;
+  let lastParent: typeof parent = undefined;
   $: {
     parentMounted(parent);
     parentUnmounted(lastParent);
     lastParent = parent;
   }
 
-  let resizeObserver: ResizeObserver | not;
+  let resizeObserver: ResizeObserver | undefined;
   onMount(() => (resizeObserver = new ResizeObserver(onResize)));
-  const parentMounted = (parent: Element | not) => parent && resizeObserver?.observe(parent);
-  const parentUnmounted = (parent: Element | not) => parent && resizeObserver?.unobserve(parent);
+  const parentMounted = (parent: Element | undefined) => parent && resizeObserver?.observe(parent);
+  const parentUnmounted = (parent: Element | undefined) =>
+    parent && resizeObserver?.unobserve(parent);
 
   function onResize() {
     if (!parent || !element) return;

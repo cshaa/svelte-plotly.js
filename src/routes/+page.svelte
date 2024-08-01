@@ -1,6 +1,8 @@
 <script lang="ts">
   import Plot from '$lib/index.js';
   import type { Data, FillParent, DebounceOptions, Config } from '$lib/index.js';
+  import type { ModeBarDefaultButtons, ModeBarButtonAny } from 'plotly.js';
+  const any = (x: any) => x;
 
   // FA icons borrowed for testing purposes only
   const MAXIMIZE_ICON = {
@@ -17,13 +19,17 @@
   let y0 = 1;
   let useDefaultLib = true;
   let fillParent: FillParent = false;
+  let staticPlot = false;
+  let showLogo = false;
+  let modeBarButtons: ModeBarButtonAny[][] | undefined = undefined;
+  let buttonsToRemove: ModeBarDefaultButtons[] = ['autoScale2d'];
   let debounce: DebounceOptions | number | undefined;
 
   let fullscreen = false;
-  $: {
-    if (fullscreen) fillParent = true;
-    else fillParent = false;
-  }
+  // $: {
+  //   if (fullscreen) fillParent = true;
+  //   else fillParent = false;
+  // }
 
   let data: Data[];
   $: data = [
@@ -42,8 +48,14 @@
         icon: fullscreen ? MINIMIZE_ICON : MAXIMIZE_ICON,
         click: () => (fullscreen = !fullscreen)
       }
-    ]
+    ],
+    modeBarButtonsToRemove: [...(buttonsToRemove ?? [])],
+    modeBarButtons,
+
+    staticPlot,
+    displaylogo: showLogo
   };
+  $: console.log(config);
 
   function addData() {
     data.push({
@@ -89,6 +101,37 @@
     <button on:click={() => (debounce = { wait: 500, maxWait: 2000 })}
       >Debounce 500ms, max wait 2s</button
     >
+    <button on:click={() => (staticPlot = !staticPlot)}>Toggle static plot</button>
+    <button on:click={() => (showLogo = !showLogo)}>Toggle Plotly logo</button>
+    <button
+      on:click={() => {
+        buttonsToRemove =
+          buttonsToRemove.length > 1
+            ? ['autoScale2d']
+            : ['zoomIn2d', 'zoomOut2d', 'zoom2d', 'autoScale2d'];
+      }}>Toggle zoom buttons</button
+    >
+    <button
+      on:click={() => {
+        modeBarButtons ??= [];
+        modeBarButtons.push([
+          {
+            name: `foobar${modeBarButtons.length}`,
+            title: `Foobar #${modeBarButtons.length}`,
+            icon: MINIMIZE_ICON,
+            click: () => {}
+          }
+        ]);
+      }}>Add custom button</button
+    >
+    <button
+      on:click={() => {
+        if (modeBarButtons?.length && modeBarButtons[0].length) {
+          any(modeBarButtons[0][0]).title = prompt('Enter new name');
+        }
+      }}>Rename first custom button</button
+    >
+    <button on:click={() => (modeBarButtons = undefined)}>Remove custom buttons</button>
   </section>
 </main>
 
