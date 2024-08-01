@@ -26,18 +26,13 @@
   let debounce: DebounceOptions | number | undefined;
 
   let fullscreen = false;
-  // $: {
-  //   if (fullscreen) fillParent = true;
-  //   else fillParent = false;
-  // }
+  $: {
+    if (fullscreen) fillParent = true;
+    else fillParent = false;
+  }
 
   let data: Data[];
-  $: data = [
-    {
-      x: [1, 2, 3, 4, 5],
-      y: [y0, 2, 4, 8, 16]
-    }
-  ];
+  $: data = [{ x: [1, 2, 3, 4, 5], y: [y0, 2, 4, 8, 16] }];
 
   let config: Partial<Config>;
   $: config = {
@@ -55,7 +50,7 @@
     staticPlot,
     displaylogo: showLogo
   };
-  $: console.log(config);
+  $: console.log('config:', config);
 
   function addData() {
     data.push({
@@ -79,9 +74,7 @@
       {fillParent}
       {debounce}
       {config}
-      layout={{
-        margin: { t: 0 }
-      }}
+      layout={{ margin: { t: 0 } }}
       libPlotly={useDefaultLib ? undefined : null}
       on:click={console.log}
       on:relayout={console.log}
@@ -128,6 +121,7 @@
       on:click={() => {
         if (modeBarButtons?.length && modeBarButtons[0].length) {
           any(modeBarButtons[0][0]).title = prompt('Enter new name');
+          modeBarButtons = modeBarButtons;
         }
       }}>Rename first custom button</button
     >

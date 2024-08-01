@@ -204,6 +204,20 @@
   export let debounce: number | DebounceOptions = 0;
 
   /**
+   * Because of an [upstream bug](https://github.com/m93a/svelte-plotly.js/issues/10),
+   * changes in the `config` prop don't always render.
+   * This prop enables a walkaround, which makes sure
+   * that changes in `config` just work.
+   *
+   * - `'static-plot'` – when changing `config`, briefly disable
+   * chart interactivity to force update
+   *
+   * - `'none'` – disable the walkaround; updating mode bar
+   * buttons might not work
+   */
+  export let configReactivityStrategy: 'none' | 'static-plot' = 'static-plot';
+
+  /**
    * Class attribute that will be passed to the HTML element
    * wrapping the plot
    */
@@ -229,7 +243,10 @@
   $: data, (datarevision = (datarevision + 1) % 1000);
   $: layout_ = { datarevision, width, height, ...layout };
   $: config_ = { displaylogo: false, ...config };
-  $: draw(libPlotly, element, data, layout_, config_);
+
+  let configUpdated = false;
+  $: config_, (configUpdated = true);
+
   $: {
     if (element && previousLib !== libPlotly) {
       previousLib?.purge(element);
@@ -246,19 +263,22 @@
     previousPlot = plot;
   }
 
-  const drawUndebounced = async (
-    lib: typeof libPlotly,
-    e: HTMLDivElement | undefined,
-    d: Data[],
-    l: Partial<Layout>,
-    c: Partial<Config>
-  ) => {
-    if (lib && e) {
-      plot = await lib.react(e, d, l, c);
+  const drawUndebounced = async () => {
+    if (!libPlotly || !element) return;
+
+    if (configUpdated && configReactivityStrategy === 'static-plot') {
+      configUpdated = false;
+      await libPlotly.react(element, data, layout_, {
+        ...config_,
+        staticPlot: !config_.staticPlot
+      });
     }
+
+    plot = await libPlotly.react(element, data, layout_, config_);
   };
 
   $: draw = debouncify(drawUndebounced, debounceWait, debounceOptions);
+  $: libPlotly, element, data, layout_, config_, configUpdated, draw();
 
   // destroy
   onDestroy(() => element && libPlotly?.purge(element));

@@ -58,17 +58,18 @@ If you don't use Vite, or this approach doesn't work for you, you can also use t
 
 ## Properties
 
-| Prop                | Type                             | Description                                                                                                                                                      |
-| ------------------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **required `data`** | `Data[]`                         | array of trace data, see https://plot.ly/javascript/reference/                                                                                                   |
-| `layout`            | `Partial<Layout>`                | layout of the plot, see https://plot.ly/javascript/reference/#layout                                                                                             |
-| `config`            | `Partial<Config>`                | configuration, see https://plot.ly/javascript/configuration-options/                                                                                             |
-| `class`             | `string`                         | class that will be passed to the HTML element wrapping the plot                                                                                                  |
-| `fillParent`        | `boolean \| 'width' \| 'height'` | automatically resize the plot to fill the width and/or height of its parent element                                                                              |
-| `debounce`          | `number \| DebounceOptions`      | debounce all changes to the plot                                                                                                                                 |
-| `libPlotly`         | `Plotly \| null \| undefined`    | an alternative Plotly bundle to use; if undefined, it defaults to the `plotly.js-dist` package; if null, no plot will be drawn and no library will be downloaded |
-| `bind:element`      | `HTMLDivElement`                 | the HTML element wrapping the plot                                                                                                                               |
-| `bind:plot`         | `PlotlyHTMLElement`              | the inner HTML element containing the plot                                                                                                                       |
+| Prop                       | Type                             | Description                                                                                                                                                      |
+| -------------------------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **required `data`**        | `Data[]`                         | array of trace data, see https://plot.ly/javascript/reference/                                                                                                   |
+| `layout`                   | `Partial<Layout>`                | layout of the plot, see https://plot.ly/javascript/reference/#layout                                                                                             |
+| `config`                   | `Partial<Config>`                | configuration, see https://plot.ly/javascript/configuration-options/                                                                                             |
+| `class`                    | `string`                         | class that will be passed to the HTML element wrapping the plot                                                                                                  |
+| `fillParent`               | `boolean \| 'width' \| 'height'` | automatically resize the plot to fill the width and/or height of its parent element                                                                              |
+| `debounce`                 | `number \| DebounceOptions`      | debounce all changes to the plot                                                                                                                                 |
+| `libPlotly`                | `Plotly \| null \| undefined`    | an alternative Plotly bundle to use; if undefined, it defaults to the `plotly.js-dist` package; if null, no plot will be drawn and no library will be downloaded |
+| `configReactivityStrategy` | `'none' \| 'static-plot'`        | walkaround for an [upstream bug](https://github.com/m93a/svelte-plotly.js/issues/10) causing `config` not to update, enabled by default                          |
+| `bind:element`             | `HTMLDivElement`                 | the HTML element wrapping the plot                                                                                                                               |
+| `bind:plot`                | `PlotlyHTMLElement`              | the inner HTML element containing the plot                                                                                                                       |
 
 ## Events
 
