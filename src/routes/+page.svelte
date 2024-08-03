@@ -76,8 +76,8 @@
       {config}
       layout={{ margin: { t: 0 } }}
       libPlotly={useDefaultLib ? undefined : null}
-      on:click={console.log}
-      on:relayout={console.log}
+      on:click={({ detail }) => console.log(detail)}
+      on:relayout={({ detail }) => console.log(detail)}
     />
   </section>
 

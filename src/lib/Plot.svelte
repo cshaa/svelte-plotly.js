@@ -81,7 +81,7 @@
   const DEFAULT_HEIGHT = 300;
 
   // events
-  interface $$Events {
+  interface Events {
     afterExport: undefined;
     afterPlot: undefined;
     animated: undefined;
@@ -158,7 +158,7 @@
     plotly_webglcontextlost: 'webGLContextLost'
     // TODO add all plotly_${traceType}click
   };
-  const dispatch = createEventDispatcher<$$Events>();
+  const dispatch = createEventDispatcher<Events>();
 
   //
   // Bind Props
