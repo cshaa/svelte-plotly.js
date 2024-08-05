@@ -4,7 +4,7 @@ This is an unofficial package that lets you efficiently use [plotly.js](https://
 
 ## Usage
 
-1. Install using `yarn add svelte-plotly.js` or `npm install svelte-plotly.js`.
+1. Install using `pnpm add svelte-plotly.js` or `npm install svelte-plotly.js`.
 2. Choose a Plotly distribution:
    - If you want to use `plotly.js-dist`, just install it.
    - If you want to use a different distribution, take a look at [this section](#custom-plotly-distribution).
@@ -54,6 +54,31 @@ If you don't use Vite, or this approach doesn't work for you, you can also use t
 </script>
 
 <Plot {libPlotly} ... />
+```
+
+## Using FontAwesome icons
+Plotly allows you to modify the chart's _mode bar_ (ie. the buttons in the chart's top right corner). However, you can't use any svelte component – it must be an icon in Plotly's specified format. This library includes a helper function `faToPlotly` that converts a FontAwesome icon to exactly what Plotly needs.
+
+```svelte
+<script lang="ts">
+  import Plot, { faToPlotly } from 'svelte-plotly.js';
+  import { faExpand, faCompress } from '@fortawesome/free-solid-svg-icons';
+  let fullscreen = false;
+</script>
+
+<Plot
+    config={{
+      modeBarButtonsToAdd: [
+        {
+          name: 'fullscreen',
+          title: fullscreen ? 'Disable Fullscreen' : 'Enable Fullscreen',
+          icon: fullscreen ? faToPlotly(faCompress) : faToPlotly(faExpand),
+          click: () => (fullscreen = !fullscreen)
+        }
+      ],
+    }}
+    ...
+/>
 ```
 
 ## Properties
