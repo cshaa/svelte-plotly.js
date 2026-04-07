@@ -1,17 +1,11 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import { faExpand, faCompress, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-
-  import Plot from '$lib/index.js';
-  import type { Data, FillParent, DebounceOptions, Config } from '$lib/index.js';
+  import { PlotV2, faToPlotly } from '$lib/index.js';
   import type { ModeBarDefaultButtons, ModeBarButtonAny } from 'plotly.js';
-  import { faToPlotly } from '$lib/index.js';
-  const any = (x: any) => x;
+  import type { Data, FillParent, DebounceOptions, Config } from '$lib/index.js';
 
   let y0 = $state(1);
   let useDefaultLib = $state(true);
-  let fillParent: FillParent = $state(false);
   let staticPlot = $state(false);
   let showLogo = $state(false);
   let modeBarButtons: ModeBarButtonAny[][] | undefined = $state(undefined);
@@ -19,36 +13,25 @@
   let debounce: DebounceOptions | number | undefined = $state();
 
   let fullscreen = $state(false);
-  run(() => {
-    if (fullscreen) fillParent = true;
-    else fillParent = false;
-  });
+  let fillParent: FillParent = $derived(fullscreen);
 
-  let data: Data[] = $state([]);
-  run(() => {
-    data = [{ x: [1, 2, 3, 4, 5], y: [y0, 2, 4, 8, 16] }];
-  });
+  // svelte-ignore state_referenced_locally
+  let data: Data[] = $state([{ x: [1, 2, 3, 4, 5], y: [y0, 2, 4, 8, 16] }]);
 
-  let config: Partial<Config> = $state({});
-  run(() => {
-    config = {
-      modeBarButtonsToAdd: [
-        {
-          name: 'fullscreen',
-          title: fullscreen ? 'Disable Fullscreen' : 'Enable Fullscreen',
-          icon: fullscreen ? faToPlotly(faCompress) : faToPlotly(faExpand),
-          click: () => (fullscreen = !fullscreen)
-        }
-      ],
-      modeBarButtonsToRemove: [...(buttonsToRemove ?? [])],
-      modeBarButtons,
+  let config: Partial<Config> = $derived({
+    modeBarButtonsToAdd: [
+      {
+        name: 'fullscreen',
+        title: fullscreen ? 'Disable Fullscreen' : 'Enable Fullscreen',
+        icon: fullscreen ? faToPlotly(faCompress) : faToPlotly(faExpand),
+        click: () => (fullscreen = !fullscreen)
+      }
+    ],
+    modeBarButtonsToRemove: [...(buttonsToRemove ?? [])],
+    modeBarButtons,
 
-      staticPlot,
-      displaylogo: showLogo
-    };
-  });
-  run(() => {
-    console.log('config:', config);
+    staticPlot,
+    displaylogo: showLogo
   });
 
   function addData() {
@@ -58,31 +41,27 @@
         .fill(0)
         .map(_ => 10 * Math.random())
     });
-    data = data;
-  }
-
-  function changeY0() {
-    y0++;
   }
 </script>
 
 <main>
   <section class="plot">
-    <Plot
+    <PlotV2
       {data}
       {fillParent}
       {debounce}
       {config}
       layout={{ margin: { t: 0 } }}
       libPlotly={useDefaultLib ? undefined : null}
-      on:click={({ detail }) => console.log(detail)}
-      on:relayout={({ detail }) => console.log(detail)}
+      onEvent={(event, args) => {
+        if (event === 'plotly_click' || event === 'plotly_relayout') console.log(args);
+      }}
     />
   </section>
 
   <section class="controls">
     <button onclick={addData}>Add trace</button>
-    <button onclick={changeY0}>Increase y<sub>0</sub></button>
+    <button onclick={() => (y0 += 1)}>Increase y<sub>0</sub></button>
     <button onclick={() => (useDefaultLib = !useDefaultLib)}>Swap lib</button>
     <button onclick={() => (fillParent = false)}>Fixed size</button>
     <button onclick={() => (fillParent = true)}>Fill parent</button>
@@ -119,7 +98,7 @@
     <button
       onclick={() => {
         if (modeBarButtons?.length && modeBarButtons[0].length) {
-          any(modeBarButtons[0][0]).title = prompt('Enter new name');
+          (modeBarButtons[0][0] as any).title = prompt('Enter new name');
           modeBarButtons = modeBarButtons;
         }
       }}>Rename first custom button</button

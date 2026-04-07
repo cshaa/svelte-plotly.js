@@ -65,15 +65,13 @@
   const nextFrame = browser ? requestAnimationFrame : () => void 0;
 
   async function loadPlotly() {
-    if (!browser) return;
+    if (!browser || libPlotly) return;
 
-    if (libPlotly === undefined) {
-      if (window.Plotly) {
-        libPlotly = window.Plotly;
-      } else {
-        const p = await import('plotly.js-dist');
-        if (libPlotly === undefined) libPlotly = 'default' in p ? p.default : p;
-      }
+    if (window.Plotly) {
+      libPlotly = window.Plotly;
+    } else {
+      const p = await import('plotly.js-dist');
+      if (libPlotly === undefined) libPlotly = 'default' in p ? p.default : p;
     }
   }
 
