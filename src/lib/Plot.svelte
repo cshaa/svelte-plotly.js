@@ -240,12 +240,12 @@
   // updates
   $: debounceWait = typeof debounce === 'object' ? debounce.wait : (debounce ?? 0);
   $: debounceOptions = typeof debounce === 'object' ? debounce : {};
-  $: data, (datarevision = (datarevision + 1) % 1000);
+  $: (data, (datarevision = (datarevision + 1) % 1000));
   $: layout_ = { datarevision, width, height, ...layout };
   $: config_ = { displaylogo: false, ...config };
 
   let configUpdated = false;
-  $: config_, (configUpdated = true);
+  $: (config_, (configUpdated = true));
 
   $: {
     if (element && previousLib !== libPlotly) {
@@ -278,13 +278,13 @@
   };
 
   $: draw = debouncify(drawUndebounced, debounceWait, debounceOptions);
-  $: libPlotly, element, data, layout_, config_, configUpdated, draw();
+  $: (libPlotly, element, data, layout_, config_, configUpdated, draw());
 
   // destroy
   onDestroy(() => element && libPlotly?.purge(element));
 
   // autosizing
-  $: fillParent, nextFrame(onResize);
+  $: (fillParent, nextFrame(onResize));
   $: fillParentWidth = fillParent === true || fillParent === 'width';
   $: fillParentHeight = fillParent === true || fillParent === 'height';
   $: parent = element?.parentElement ?? undefined;
@@ -322,7 +322,7 @@
   class:fillParentWidth
   class:fillParentHeight
   bind:this={element}
-/>
+></div>
 
 <style lang="scss">
   .fillParent {

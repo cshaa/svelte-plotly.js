@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { faExpand, faCompress, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
   import Plot from '$lib/index.js';
@@ -7,41 +9,47 @@
   import { faToPlotly } from '$lib/index.js';
   const any = (x: any) => x;
 
-  let y0 = 1;
-  let useDefaultLib = true;
-  let fillParent: FillParent = false;
-  let staticPlot = false;
-  let showLogo = false;
-  let modeBarButtons: ModeBarButtonAny[][] | undefined = undefined;
-  let buttonsToRemove: ModeBarDefaultButtons[] = ['autoScale2d'];
-  let debounce: DebounceOptions | number | undefined;
+  let y0 = $state(1);
+  let useDefaultLib = $state(true);
+  let fillParent: FillParent = $state(false);
+  let staticPlot = $state(false);
+  let showLogo = $state(false);
+  let modeBarButtons: ModeBarButtonAny[][] | undefined = $state(undefined);
+  let buttonsToRemove: ModeBarDefaultButtons[] = $state(['autoScale2d']);
+  let debounce: DebounceOptions | number | undefined = $state();
 
-  let fullscreen = false;
-  $: {
+  let fullscreen = $state(false);
+  run(() => {
     if (fullscreen) fillParent = true;
     else fillParent = false;
-  }
+  });
 
-  let data: Data[];
-  $: data = [{ x: [1, 2, 3, 4, 5], y: [y0, 2, 4, 8, 16] }];
+  let data: Data[] = $state([]);
+  run(() => {
+    data = [{ x: [1, 2, 3, 4, 5], y: [y0, 2, 4, 8, 16] }];
+  });
 
-  let config: Partial<Config>;
-  $: config = {
-    modeBarButtonsToAdd: [
-      {
-        name: 'fullscreen',
-        title: fullscreen ? 'Disable Fullscreen' : 'Enable Fullscreen',
-        icon: fullscreen ? faToPlotly(faCompress) : faToPlotly(faExpand),
-        click: () => (fullscreen = !fullscreen)
-      }
-    ],
-    modeBarButtonsToRemove: [...(buttonsToRemove ?? [])],
-    modeBarButtons,
+  let config: Partial<Config> = $state({});
+  run(() => {
+    config = {
+      modeBarButtonsToAdd: [
+        {
+          name: 'fullscreen',
+          title: fullscreen ? 'Disable Fullscreen' : 'Enable Fullscreen',
+          icon: fullscreen ? faToPlotly(faCompress) : faToPlotly(faExpand),
+          click: () => (fullscreen = !fullscreen)
+        }
+      ],
+      modeBarButtonsToRemove: [...(buttonsToRemove ?? [])],
+      modeBarButtons,
 
-    staticPlot,
-    displaylogo: showLogo
-  };
-  $: console.log('config:', config);
+      staticPlot,
+      displaylogo: showLogo
+    };
+  });
+  run(() => {
+    console.log('config:', config);
+  });
 
   function addData() {
     data.push({
@@ -73,22 +81,22 @@
   </section>
 
   <section class="controls">
-    <button on:click={addData}>Add trace</button>
-    <button on:click={changeY0}>Increase y<sub>0</sub></button>
-    <button on:click={() => (useDefaultLib = !useDefaultLib)}>Swap lib</button>
-    <button on:click={() => (fillParent = false)}>Fixed size</button>
-    <button on:click={() => (fillParent = true)}>Fill parent</button>
-    <button on:click={() => (fillParent = 'width')}>Fill width</button>
-    <button on:click={() => (fillParent = 'height')}>Fill height</button>
-    <button on:click={() => (debounce = undefined)}>Don't debounce</button>
-    <button on:click={() => (debounce = 500)}>Debounce 500ms</button>
-    <button on:click={() => (debounce = { wait: 500, maxWait: 2000 })}
+    <button onclick={addData}>Add trace</button>
+    <button onclick={changeY0}>Increase y<sub>0</sub></button>
+    <button onclick={() => (useDefaultLib = !useDefaultLib)}>Swap lib</button>
+    <button onclick={() => (fillParent = false)}>Fixed size</button>
+    <button onclick={() => (fillParent = true)}>Fill parent</button>
+    <button onclick={() => (fillParent = 'width')}>Fill width</button>
+    <button onclick={() => (fillParent = 'height')}>Fill height</button>
+    <button onclick={() => (debounce = undefined)}>Don't debounce</button>
+    <button onclick={() => (debounce = 500)}>Debounce 500ms</button>
+    <button onclick={() => (debounce = { wait: 500, maxWait: 2000 })}
       >Debounce 500ms, max wait 2s</button
     >
-    <button on:click={() => (staticPlot = !staticPlot)}>Toggle static plot</button>
-    <button on:click={() => (showLogo = !showLogo)}>Toggle Plotly logo</button>
+    <button onclick={() => (staticPlot = !staticPlot)}>Toggle static plot</button>
+    <button onclick={() => (showLogo = !showLogo)}>Toggle Plotly logo</button>
     <button
-      on:click={() => {
+      onclick={() => {
         buttonsToRemove =
           buttonsToRemove.length > 1
             ? ['autoScale2d']
@@ -96,7 +104,7 @@
       }}>Toggle zoom buttons</button
     >
     <button
-      on:click={() => {
+      onclick={() => {
         modeBarButtons ??= [];
         modeBarButtons.push([
           {
@@ -109,14 +117,14 @@
       }}>Add custom button</button
     >
     <button
-      on:click={() => {
+      onclick={() => {
         if (modeBarButtons?.length && modeBarButtons[0].length) {
           any(modeBarButtons[0][0]).title = prompt('Enter new name');
           modeBarButtons = modeBarButtons;
         }
       }}>Rename first custom button</button
     >
-    <button on:click={() => (modeBarButtons = undefined)}>Remove custom buttons</button>
+    <button onclick={() => (modeBarButtons = undefined)}>Remove custom buttons</button>
   </section>
 </main>
 
